@@ -1,0 +1,70 @@
+apply plugin: 'com.android.feature'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+def apiFile = file("api.properties")
+def apiProps = new Properties()
+if (apiFile.exists()) {
+    apiProps.load(new FileInputStream(apiFile))
+}
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+    baseFeature true
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode rootProject.versionCode
+        versionName rootProject.versionName
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        buildConfigField 'String', 'ENDPOINT', apiProps['WALMART_PRODUCTION_V1']
+        buildConfigField 'String', 'API_KEY', apiProps['API_KEY']
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
+dependencies {
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:${rootProject.supportLib}"
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.0'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.0'
+
+
+    feature project(":about")
+    application project(":apk")
+
+    api("com.android.support:appcompat-v7:${rootProject.supportLib}",
+            "com.android.support:design:${rootProject.supportLib}",
+            "com.android.support:recyclerview-v7:${rootProject.supportLib}",
+            "com.android.support:cardview-v7:${rootProject.supportLib}",
+            "com.android.support:support-annotations:${rootProject.supportLib}",
+            "android.arch.lifecycle:runtime:${rootProject.arcVersion}",
+            "android.arch.lifecycle:extensions:${rootProject.arcVersion}",
+            "com.google.dagger:dagger:${rootProject.daggerVersion}",
+            "com.google.dagger:dagger-android-support:${rootProject.daggerVersion}",
+            "com.squareup.picasso:picasso:2.5.2",
+            "com.squareup.retrofit2:retrofit:${rootProject.retrofitVersion}",
+            "com.squareup.retrofit2:converter-gson:${rootProject.retrofitVersion}",
+            "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2",
+            "com.facebook.stetho:stetho-okhttp3:${rootProject.stethoVersion}",
+            "com.google.code.gson:gson:2.4",
+            "com.android.support:multidex:1.0.2")
+
+    annotationProcessor("com.google.dagger:dagger-compiler:${rootProject.daggerVersion}",
+            "android.arch.lifecycle:compiler:${rootProject.arcVersion}")
+}
