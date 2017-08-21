@@ -13,6 +13,7 @@ import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.gson.Gson;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Named;
@@ -21,6 +22,7 @@ import javax.inject.Singleton;
 import dagger.Module;
 import dagger.Provides;
 import okhttp3.Cache;
+import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -41,6 +43,21 @@ public final class DataModule {
             .writeTimeout(30, TimeUnit.SECONDS));
   }
 
+  static OkHttpClient.Builder createUnsafeOkHttpClient(Context context) {
+    //Install a HTTP cache in the application cache directory.
+    File cacheDir = new File(context.getCacheDir(), "http");
+    Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
+    return DaggerUtil.track(new OkHttpClient.Builder().cache(cache)
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .connectionSpecs(Arrays.asList(
+                    ConnectionSpec.MODERN_TLS,
+                    ConnectionSpec.COMPATIBLE_TLS
+            ))
+    );
+  }
+
   @NonNull
   private static final String PREFERENCES_KEY = "key:golf_preferences";
 
@@ -59,7 +76,7 @@ public final class DataModule {
   @Provides
   @Singleton
   OkHttpClient provideOkHttpClient(@NonNull Context context) {
-    final OkHttpClient.Builder builder = createOkHttpClient(context);
+    final OkHttpClient.Builder builder = createUnsafeOkHttpClient(context);
     return DaggerUtil.track(builder.build());
   }
 

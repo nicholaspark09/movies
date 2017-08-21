@@ -28,10 +28,6 @@ android {
 
 dependencies {
     api project(':base')
-
-    compile "com.google.dagger:dagger:${rootProject.daggerVersion}"
-    compile "com.google.dagger:dagger-android-support:${rootProject.daggerVersion}"
-
     annotationProcessor("com.google.dagger:dagger-compiler:${rootProject.daggerVersion}",
             "android.arch.lifecycle:compiler:${rootProject.arcVersion}")
 }

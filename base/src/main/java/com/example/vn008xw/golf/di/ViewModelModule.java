@@ -7,5 +7,4 @@ import dagger.multibindings.IntoMap;
 @Module
 abstract class ViewModelModule {
 
-
 }

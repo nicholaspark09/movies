@@ -47,4 +47,14 @@ public class ApiResponse<T> {
   public boolean isSuccessful() {
     return code >= 200 && code < 300;
   }
+
+  @Nullable
+  public T getBody() {
+    return body;
+  }
+
+  @Nullable
+  public String getErrorMessage() {
+    return errorMessage;
+  }
 }

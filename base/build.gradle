@@ -62,6 +62,7 @@ dependencies {
             "com.squareup.retrofit2:converter-gson:${rootProject.retrofitVersion}",
             "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2",
             "com.facebook.stetho:stetho-okhttp3:${rootProject.stethoVersion}",
+            "com.android.support.constraint:constraint-layout:${rootProject.constraintVersion}",
             "com.google.code.gson:gson:2.4",
             "com.android.support:multidex:1.0.2")
 
