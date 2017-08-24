@@ -15,8 +15,8 @@ I have a full-time job in the Bay area, so in between `pr`s at my company and be
 I'd appreciate feedback.
 
 ## Things to keep in mind
-There are two oustanding bugs with `instantapp`s that very much matter. 
-1) `databinding` doesn't work in feature modules. 
+There are two oustanding bugs with `instantapp`s that very much matter.
+1) `databinding` doesn't work in feature modules.
 2) `lifecycle` fragments and activities don't yet work in feature modules. 
 
 Until those are fixed...well...Google has a lot on their plate.
