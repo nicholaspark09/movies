@@ -1,14 +1,16 @@
 package com.example.movies.ui;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.movies.R;
+import com.example.movies.di.MoviesInjector;
+import com.example.vn008xw.golf.ui.base.BaseFragment;
 
-public class MoviesFragment extends Fragment {
+public class MoviesFragment extends BaseFragment {
 
 
   public MoviesFragment() {
@@ -32,6 +34,11 @@ public class MoviesFragment extends Fragment {
     return inflater.inflate(R.layout.fragment_movies, container, false);
   }
 
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    MoviesInjector.initAndGetComponent(context).inject(this);
+  }
 
   @Override
   public void onDetach() {
