@@ -32,5 +32,6 @@ dependencies {
             "android.arch.lifecycle:compiler:${rootProject.arcVersion}")
     androidTestCompile("android.arch.core:core-testing:${rootProject.arcVersion}", {})
     testCompile "org.mockito:mockito-android:${rootProject.mockitoVersion}"
-
 }
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'

@@ -21,6 +21,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         buildConfigField 'String', 'ENDPOINT', apiProps['WALMART_PRODUCTION_V1']
+        buildConfigField 'String', 'MOVIE_ENDPOINT', apiProps['MOVIE_URL']
+        buildConfigField 'String', 'API_ID', apiProps['API_ID']
         buildConfigField 'String', 'API_KEY', apiProps['API_KEY']
     }
     buildTypes {
@@ -46,6 +48,7 @@ dependencies {
 
 
     feature project(":about")
+    feature project(":movies")
     application project(":apk")
 
     api("com.android.support:appcompat-v7:${rootProject.supportLib}",

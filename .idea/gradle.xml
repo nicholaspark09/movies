@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/apk" />
             <option value="$PROJECT_DIR$/base" />
             <option value="$PROJECT_DIR$/instant" />
+            <option value="$PROJECT_DIR$/movies" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

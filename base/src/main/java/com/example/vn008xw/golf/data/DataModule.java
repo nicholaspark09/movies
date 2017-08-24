@@ -6,7 +6,10 @@ import android.support.annotation.NonNull;
 
 import com.example.vn008xw.golf.AppExecutors;
 import com.example.vn008xw.golf.BuildConfig;
+import com.example.vn008xw.golf.data.api.MovieService;
 import com.example.vn008xw.golf.data.api.WalmartService;
+import com.example.vn008xw.golf.data.movie.MovieDataSource;
+import com.example.vn008xw.golf.data.movie.MovieRepository;
 import com.example.vn008xw.golf.di.LiveDataAdapterFactory;
 import com.example.vn008xw.golf.util.DaggerUtil;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
@@ -96,23 +99,12 @@ public final class DataModule {
 
   @Provides
   @Singleton
-  Retrofit provideRetrofit(OkHttpClient okHttpClient, @Named("Endpoint") String endpoint) {
-
+  Retrofit.Builder provideRetrofitBuilder(OkHttpClient okHttpClient) {
     return DaggerUtil.track(
             new Retrofit.Builder()
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(new LiveDataAdapterFactory())
-                    .baseUrl(endpoint)
-                    .build()
-    );
-  }
-
-  @Provides
-  @Singleton
-  WalmartService provideWalmartService(Retrofit retrofit) {
-    return DaggerUtil.track(
-            retrofit.create(WalmartService.class)
     );
   }
 
@@ -120,6 +112,36 @@ public final class DataModule {
   @Singleton
   AppExecutors provideAppExecutors() {
     return DaggerUtil.track(new AppExecutors());
+  }
+
+  @Provides
+  @Singleton
+  WalmartService provideWalmartService(Retrofit.Builder builder) {
+    return DaggerUtil.track(
+            builder.baseUrl(BuildConfig.ENDPOINT)
+                    .build()
+                    .create(WalmartService.class)
+    );
+  }
+
+  @Provides
+  @Singleton
+  MovieService provideMovieService(Retrofit.Builder builder) {
+    return DaggerUtil.track(
+            builder.baseUrl(BuildConfig.MOVIE_ENDPOINT)
+            .build()
+            .create(MovieService.class)
+    );
+  }
+
+  @Provides
+  @Singleton
+  MovieDataSource provideMovieRepository(@NonNull AppExecutors appExecutors,
+                                         @NonNull MovieService movieService,
+                                         @NonNull @Named("ApiKey") String apiKey) {
+    return DaggerUtil.track(
+            new MovieRepository(appExecutors, movieService, apiKey)
+    );
   }
 
   @Provides
