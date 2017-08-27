@@ -31,6 +31,7 @@ task clean(type: Delete) {
 ext {
     compileSdkVersion = 26
     buildToolsVersion = "26.0.0"
+    butterknifeVersion = '8.8.1'
     minSdkVersion = 19
     targetSdkVersion = 26
     versionCode = 1
@@ -42,4 +43,49 @@ ext {
     arcVersion = "1.0.0-alpha7"
     constraintVersion = "1.0.2"
     mockitoVersion = "2.7.19"
+    leakCanaryVersion = '1.5.1'
+    gsonVersion = '2.4'
+    picassoVersion = '2.5.2'
+    dexVersion = '1.0.2'
+    glideVersion = '3.7.0'
 }
+
+ext.deps = [
+        'butterknife': [
+                'runtime' : "com.jakewharton:butterknife:${ext.butterknifeVersion}",
+                'compiler': "com.jakewharton:butterknife-compiler:${ext.butterknifeVersion}",
+        ],
+        'dagger'    : [
+                'base'          : "com.google.dagger:dagger:${ext.daggerVersion}",
+                'androidSupport': "com.google.dagger:dagger-android-support:${ext.daggerVersion}",
+                'compiler'      : "com.google.dagger:dagger-compiler:${ext.daggerVersion}"
+        ],
+        'dex'       : "com.android.support:multidex:${ext.dexVersion}",
+        'glide'     : "com.github.bumptech.glide:glide:${ext.glideVersion}",
+        'gson'      : "com.google.code.gson:gson:${ext.gsonVersion}",
+        'retrofit'  : [
+                'base'         : "com.squareup.retrofit2:retrofit:${ext.retrofitVersion}",
+                'gsonConverter': "com.squareup.retrofit2:converter-gson:${ext.retrofitVersion}"
+        ],
+        'lifecycle' : [
+                'runtime'   : "android.arch.lifecycle:runtime:${ext.arcVersion}",
+                'extensions': "android.arch.lifecycle:extensions:${ext.arcVersion}",
+                'compiler'  : "android.arch.lifecycle:compiler:${ext.arcVersion}"
+        ],
+        'support'   : [
+                'annotations'     : "com.android.support:support-annotations:${ext.supportLib}",
+                'design'          : "com.android.support:design:${ext.supportLib}",
+                'recyclerView'    : "com.android.support:recyclerview-v7:${ext.supportLib}",
+                'cardView'        : "com.android.support:cardview-v7:${ext.supportLib}",
+                'appCompat'       : "com.android.support:appcompat-v7:${ext.supportLib}",
+                'constraintLayout': "com.android.support.constraint:constraint-layout:${ext.constraintVersion}"
+        ],
+        'stetho'    : "com.facebook.stetho:stetho-okhttp3:${ext.stethoVersion}",
+        'timber'    : 'com.jakewharton.timber:timber:4.5.1',
+        'picasso'   : "com.squareup.picasso:picasso:${ext.picassoVersion}",
+        'kotlin'    : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${ext.kotlin_version}",
+        'leakCanary': [
+                'real': "com.squareup.leakcanary:leakcanary-android:${ext.leakCanaryVersion}",
+                'noOp': "com.squareup.leakcanary:leakcanary-android-no-op:${ext.leakCanaryVersion}",
+        ]
+]

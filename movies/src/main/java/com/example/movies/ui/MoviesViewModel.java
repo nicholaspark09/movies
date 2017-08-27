@@ -24,6 +24,8 @@ import javax.inject.Inject;
  */
 public final class MoviesViewModel extends AndroidViewModel implements MoviesContract {
 
+  private static final String TAG = MoviesViewModel.class.getSimpleName();
+
   @Inject
   MovieDataSource repository;
   @VisibleForTesting

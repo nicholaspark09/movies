@@ -40,8 +40,8 @@ android {
 dependencies {
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
-    implementation "com.android.support:appcompat-v7:${rootProject.supportLib}"
+    implementation deps.kotlin
+    implementation deps.support.appCompat
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.0'
@@ -51,24 +51,28 @@ dependencies {
     feature project(":movies")
     application project(":apk")
 
-    api("com.android.support:appcompat-v7:${rootProject.supportLib}",
-            "com.android.support:design:${rootProject.supportLib}",
-            "com.android.support:recyclerview-v7:${rootProject.supportLib}",
-            "com.android.support:cardview-v7:${rootProject.supportLib}",
-            "com.android.support:support-annotations:${rootProject.supportLib}",
-            "android.arch.lifecycle:runtime:${rootProject.arcVersion}",
-            "android.arch.lifecycle:extensions:${rootProject.arcVersion}",
-            "com.google.dagger:dagger:${rootProject.daggerVersion}",
-            "com.google.dagger:dagger-android-support:${rootProject.daggerVersion}",
-            "com.squareup.picasso:picasso:2.5.2",
-            "com.squareup.retrofit2:retrofit:${rootProject.retrofitVersion}",
-            "com.squareup.retrofit2:converter-gson:${rootProject.retrofitVersion}",
-            "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.0.2",
-            "com.facebook.stetho:stetho-okhttp3:${rootProject.stethoVersion}",
-            "com.android.support.constraint:constraint-layout:${rootProject.constraintVersion}",
-            "com.google.code.gson:gson:2.4",
-            "com.android.support:multidex:1.0.2")
+    api(deps.support.appCompat,
+            deps.support.annotations,
+            deps.support.design,
+            deps.support.recyclerView,
+            deps.support.cardView,
+            deps.lifecycle.runtime,
+            deps.lifecycle.extensions,
+            deps.dagger.base,
+            deps.dagger.androidSupport,
+            deps.glide,
+            deps.picasso,
+            deps.retrofit.base,
+            deps.retrofit.gsonConverter,
+            deps.stetho,
+            deps.support.constraintLayout,
+            deps.gson,
+            deps.dex,
+            deps.leakCanary.real,
+            deps.timber)
 
-    annotationProcessor("com.google.dagger:dagger-compiler:${rootProject.daggerVersion}",
-            "android.arch.lifecycle:compiler:${rootProject.arcVersion}")
+    annotationProcessor(
+            deps.dagger.compiler,
+            deps.lifecycle.compiler
+    )
 }

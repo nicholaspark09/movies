@@ -3,6 +3,7 @@ package com.example.vn008xw.golf.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.example.vn008xw.golf.AppExecutors;
 import com.example.vn008xw.golf.BuildConfig;
@@ -33,6 +34,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public final class DataModule {
 
+  private static final String TAG = DataModule.class.getSimpleName();
   private static final long DISK_CACHE_SIZE = 50 * 1024 * 1024; // 50MB
   private static final int TIMEOUT_LIMIT = 10;
 
@@ -41,6 +43,7 @@ public final class DataModule {
     File cacheDir = new File(context.getCacheDir(), "https");
     Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
     return DaggerUtil.track(new OkHttpClient.Builder().cache(cache)
+            .connectionSpecs(Arrays.asList(ConnectionSpec.MODERN_TLS, ConnectionSpec.CLEARTEXT))
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS));
@@ -51,6 +54,7 @@ public final class DataModule {
     File cacheDir = new File(context.getCacheDir(), "http");
     Cache cache = new Cache(cacheDir, DISK_CACHE_SIZE);
     return DaggerUtil.track(new OkHttpClient.Builder().cache(cache)
+            .connectionSpecs(Arrays.asList(ConnectionSpec.MODERN_TLS, ConnectionSpec.CLEARTEXT))
             .connectTimeout(30, TimeUnit.SECONDS)
             .readTimeout(30, TimeUnit.SECONDS)
             .writeTimeout(30, TimeUnit.SECONDS)
@@ -79,7 +83,7 @@ public final class DataModule {
   @Provides
   @Singleton
   OkHttpClient provideOkHttpClient(@NonNull Context context) {
-    final OkHttpClient.Builder builder = createUnsafeOkHttpClient(context);
+    final OkHttpClient.Builder builder = createOkHttpClient(context);
     return DaggerUtil.track(builder.build());
   }
 
@@ -127,6 +131,7 @@ public final class DataModule {
   @Provides
   @Singleton
   MovieService provideMovieService(Retrofit.Builder builder) {
+    Log.d(TAG, "The endpoint is: " + BuildConfig.MOVIE_ENDPOINT);
     return DaggerUtil.track(
             builder.baseUrl(BuildConfig.MOVIE_ENDPOINT)
             .build()

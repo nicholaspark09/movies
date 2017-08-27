@@ -17,6 +17,7 @@ import com.example.vn008xw.golf.vo.Resource;
 
 public abstract class NetworkBoundLocalResource<ResultType, RequestType> {
 
+  private static final String TAG = NetworkBoundLocalResource.class.getSimpleName();
   private final AppExecutors appExecutors;
 
   private final MediatorLiveData<Resource<ResultType>> result = new MediatorLiveData<>();
@@ -24,10 +25,12 @@ public abstract class NetworkBoundLocalResource<ResultType, RequestType> {
   @MainThread
   public NetworkBoundLocalResource(AppExecutors appExecutors) {
     this.appExecutors = appExecutors;
+    Log.d(TAG, "You are looking and loading from local source");
     LiveData<ResultType> localSource = loadFromLocalSource();
     result.addSource(localSource, data -> {
       result.removeSource(localSource);
 
+      Log.d(TAG, "You are int he local source");
       if (shouldFetch(data)) {
         fetchFromNetwork(localSource);
       } else {

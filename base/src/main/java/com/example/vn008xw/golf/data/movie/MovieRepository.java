@@ -5,6 +5,7 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.util.Log;
 
 import com.example.vn008xw.carbeat.data.vo.Movie;
 import com.example.vn008xw.carbeat.data.vo.Poster;
@@ -22,13 +23,15 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import timber.log.Timber;
+
 public final class MovieRepository implements MovieDataSource {
 
   private static final String TAG = MovieRepository.class.getSimpleName();
   private static final String YEAR = "2017";
 
   @VisibleForTesting
-  boolean cacheIsDirty = false;
+  boolean cacheIsDirty = true;
   @VisibleForTesting
   final AppExecutors appExecutors;
   @VisibleForTesting
@@ -67,6 +70,7 @@ public final class MovieRepository implements MovieDataSource {
           if (cache.containsKey(page)) {
             appExecutors.mainThread().execute(() -> result.setValue(cache.get(page)));
           } else {
+            appExecutors.mainThread().execute(() -> result.setValue(null));
             cacheIsDirty = true;
           }
         });
@@ -76,7 +80,7 @@ public final class MovieRepository implements MovieDataSource {
 
       @Override
       protected boolean shouldFetch(@Nullable List<Movie> data) {
-        return data == null || cacheIsDirty;
+        return data == null || data.isEmpty() || cacheIsDirty;
       }
 
       @NonNull

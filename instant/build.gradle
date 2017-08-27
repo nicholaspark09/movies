@@ -23,5 +23,6 @@ android {
 
 dependencies {
     implementation project(":base")
+    implementation project(":movies")
     implementation project(":about")
 }
