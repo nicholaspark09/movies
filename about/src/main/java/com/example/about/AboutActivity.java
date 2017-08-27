@@ -1,8 +1,10 @@
 package com.example.about;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.widget.Toolbar;
+import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.example.about.ui.AboutFragment;
 import com.example.vn008xw.golf.ui.base.BaseActivity;
@@ -10,6 +12,8 @@ import com.example.vn008xw.golf.ui.base.BaseActivity;
 public class AboutActivity extends BaseActivity {
 
   private static final String FAKE_UPC = "035000521019";
+  private static final String QUERY_MOVIE_KEY = "movieId";
+  private Integer movieId;
 
 
   @Override
@@ -19,14 +23,49 @@ public class AboutActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_about);
 
+
+    // Get the movieId
+    if (savedInstanceState == null) {
+      try {
+        movieId = getMovieId(getIntent());
+
+      } catch (NumberFormatException e) {
+        e.printStackTrace();
+        Toast.makeText(this, "Couldn't find the movie id. Sorry.", Toast.LENGTH_SHORT).show();
+      }
+    } else {
+      movieId = savedInstanceState.getInt(QUERY_MOVIE_KEY);
+    }
+
     AboutFragment fragment =
             (AboutFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
     if (fragment == null) {
-      fragment = AboutFragment.create(FAKE_UPC);
+      fragment = AboutFragment.create(movieId);
     }
     getSupportFragmentManager()
             .beginTransaction()
             .replace(R.id.contentFrame, fragment)
             .commitAllowingStateLoss();
+  }
+
+  @Override
+  protected void onSaveInstanceState(Bundle outState) {
+    super.onSaveInstanceState(outState);
+    if (movieId != null) {
+      outState.putInt(QUERY_MOVIE_KEY, movieId);
+    }
+  }
+
+  @Override
+  protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    super.onRestoreInstanceState(savedInstanceState);
+    movieId = savedInstanceState.getInt(QUERY_MOVIE_KEY);
+  }
+
+  private Integer getMovieId(@NonNull Intent intent) throws NumberFormatException {
+    final Uri data = intent.getData();
+    final String movieIdText = data.getQueryParameter(QUERY_MOVIE_KEY);
+    final Integer movieId = Integer.valueOf(movieIdText);
+    return movieId;
   }
 }

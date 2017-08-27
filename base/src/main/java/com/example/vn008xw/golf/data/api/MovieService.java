@@ -4,6 +4,7 @@ package com.example.vn008xw.golf.data.api;
 import android.arch.lifecycle.LiveData;
 
 import com.example.vn008xw.carbeat.data.vo.ImageResult;
+import com.example.vn008xw.carbeat.data.vo.Movie;
 import com.example.vn008xw.carbeat.data.vo.SearchResult;
 import com.example.vn008xw.golf.vo.ApiResponse;
 
@@ -17,6 +18,10 @@ public interface MovieService {
   LiveData<ApiResponse<SearchResult>> discoverByYear(@Query("api_key") String apiKey,
                                                      @Query("page") Integer page,
                                                      @Query("primary_release_year") String year);
+
+  @GET("/3/movie/{movieId}")
+  LiveData<ApiResponse<Movie>> getMovie(@Path("movieId") Integer movieId,
+                                        @Query("api_key") String apiKey);
 
   @GET("/3/movie/{movieId}/images")
   LiveData<ApiResponse<ImageResult>> getImages(@Path("movieId") Integer movieId,

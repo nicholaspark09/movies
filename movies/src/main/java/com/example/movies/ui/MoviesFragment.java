@@ -22,8 +22,6 @@ import com.example.vn008xw.golf.util.IntentUtil;
 import com.example.vn008xw.golf.vo.AutoClearedValue;
 import com.example.vn008xw.golf.vo.Resource;
 
-import timber.log.Timber;
-
 
 /**
  * Acts as the `view` for the viewmodel
@@ -102,7 +100,8 @@ public class MoviesFragment extends BaseFragment {
   private void setupAdapter() {
     final MoviesAdapter adapter = new MoviesAdapter(movie -> {
       // Send them to another instant app just to see if it works
-      final Intent intent = IntentUtil.getInstantAppIntent(getContext(), "https://golfstory.com/about");
+      String url = "https://golfstory.com/about?movieId=" + movie.getId();
+      final Intent intent = IntentUtil.getInstantAppIntent(getContext(), url);
       startActivity(intent);
     });
     mMoviesAdapter = new AutoClearedValue<>(this, adapter);

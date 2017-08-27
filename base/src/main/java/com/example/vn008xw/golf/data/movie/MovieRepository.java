@@ -5,7 +5,6 @@ import android.arch.lifecycle.MediatorLiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
-import android.util.Log;
 
 import com.example.vn008xw.carbeat.data.vo.Movie;
 import com.example.vn008xw.carbeat.data.vo.Poster;
@@ -23,8 +22,6 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import timber.log.Timber;
-
 public final class MovieRepository implements MovieDataSource {
 
   private static final String TAG = MovieRepository.class.getSimpleName();
@@ -38,6 +35,8 @@ public final class MovieRepository implements MovieDataSource {
   final MovieService movieService;
   @VisibleForTesting
   final Map<Integer, List<Movie>> cache;
+  @VisibleForTesting
+  Movie cachedMovie;
   private final String API_KEY;
 
   @Inject
@@ -48,6 +47,39 @@ public final class MovieRepository implements MovieDataSource {
     this.movieService = movieService;
     API_KEY = apiKey;
     cache = new LinkedHashMap<>();
+  }
+
+  public LiveData<Resource<Movie>> getMovie(@NonNull Integer movieId) {
+    return new NetworkBoundLocalResource<Movie, Movie>(appExecutors) {
+
+      @Override
+      protected void saveLocalSource(@NonNull Movie item) {
+        cachedMovie = item;
+      }
+
+      @NonNull
+      @Override
+      protected LiveData<Movie> loadFromLocalSource() {
+        final MediatorLiveData<Movie> localResult = new MediatorLiveData<>();
+        if (cachedMovie != null) {
+          localResult.setValue(cachedMovie);
+        } else {
+          localResult.setValue(null);
+        }
+        return localResult;
+      }
+
+      @Override
+      protected boolean shouldFetch(@Nullable Movie data) {
+        return data == null;
+      }
+
+      @NonNull
+      @Override
+      protected LiveData<ApiResponse<Movie>> createCall() {
+        return movieService.getMovie(movieId, API_KEY);
+      }
+    }.asLiveData();
   }
 
   public LiveData<Resource<List<Movie>>> getMovies(@NonNull Integer page) {

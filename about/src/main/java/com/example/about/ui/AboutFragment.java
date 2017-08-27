@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.example.about.R;
 import com.example.about.di.AboutInjector;
@@ -22,13 +24,14 @@ import com.example.vn008xw.golf.vo.Resource;
 public class AboutFragment extends BaseFragment {
 
   private static final String TAG = AboutFragment.class.getSimpleName();
-  private static final String UPC_KEY = "args:item_upc";
+  private static final String MOVIE_KEY = "args:movie_id";
 
   // Instant app feature modules don't actually support databinding for now
   private AboutViewModel viewModel;
   private AutoClearedValue<Toolbar> toolbar;
-  private AutoClearedValue<ImageView> imageView;
+  private AutoClearedValue<ViewPager> viewPager;
   private AutoClearedValue<ProgressBar> progressBar;
+  private AutoClearedValue<TextView> description;
 
   @Nullable
   @Override
@@ -49,25 +52,28 @@ public class AboutFragment extends BaseFragment {
     super.onViewCreated(view, savedInstanceState);
 
     toolbar = new AutoClearedValue<>(this, view.findViewById(R.id.toolbar));
-    imageView = new AutoClearedValue<>(this, view.findViewById(R.id.image));
+    viewPager = new AutoClearedValue<>(this, view.findViewById(R.id.view_pager));
     progressBar = new AutoClearedValue<>(this, view.findViewById(R.id.progress_bar));
+    description = new AutoClearedValue<>(this, view.findViewById(R.id.description));
   }
 
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
     viewModel = ViewModelProviders.of(this).get(AboutViewModel.class);
-    viewModel.loadItem().observe(this, response -> {
+    viewModel.loadMovie().observe(this, response -> {
 
       setLoading(response.status);
       if (response.status == Resource.Status.SUCCESS) {
-        toolbar.get().setTitle(response.data.getName());
-      }else if (response.status == Resource.Status.ERROR) {
+        toolbar.get().setTitle(response.data.getTitle());
+        description.get().setText(response.data.getOverview());
+        Log.d(TAG, "You got the movie");
+      } else if (response.status == Resource.Status.ERROR) {
         handleError(response.message);
       }
     });
 
-    viewModel.setUpc(getArguments().getString(UPC_KEY, ""));
+    viewModel.setMovieId(getArguments().getInt(MOVIE_KEY));
 
     super.onActivityCreated(savedInstanceState);
   }
@@ -76,13 +82,11 @@ public class AboutFragment extends BaseFragment {
     progressBar.get().setVisibility(status == Resource.Status.LOADING ? View.VISIBLE : View.GONE);
   }
 
-  public static AboutFragment create(@NonNull String upc) {
-    Log.d("AboutFragment", "Creating fragment");
+  public static AboutFragment create(@NonNull Integer movieId) {
     final AboutFragment fragment = new AboutFragment();
     final Bundle bundle = new Bundle();
-    bundle.putString(UPC_KEY, upc);
+    bundle.putInt(MOVIE_KEY, movieId);
     fragment.setArguments(bundle);
     return fragment;
   }
-
 }
