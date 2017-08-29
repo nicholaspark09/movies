@@ -7,11 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -32,6 +30,7 @@ public class AboutFragment extends BaseFragment {
   private AutoClearedValue<ViewPager> viewPager;
   private AutoClearedValue<ProgressBar> progressBar;
   private AutoClearedValue<TextView> description;
+  private AutoClearedValue<PosterImageAdapter> adapter;
 
   @Nullable
   @Override
@@ -67,7 +66,20 @@ public class AboutFragment extends BaseFragment {
       if (response.status == Resource.Status.SUCCESS) {
         toolbar.get().setTitle(response.data.getTitle());
         description.get().setText(response.data.getOverview());
-        Log.d(TAG, "You got the movie");
+
+      } else if (response.status == Resource.Status.ERROR) {
+        handleError(response.message);
+      }
+    });
+
+    viewModel.loadPosters().observe(this, response ->{
+
+      if (response.status == Resource.Status.SUCCESS) {
+        if (viewPager.get() != null) {
+          final PosterImageAdapter posterImageAdapter = new PosterImageAdapter(getContext(), response.data);
+          adapter = new AutoClearedValue<>(AboutFragment.this, posterImageAdapter);
+          viewPager.get().setAdapter(posterImageAdapter);
+        }
       } else if (response.status == Resource.Status.ERROR) {
         handleError(response.message);
       }

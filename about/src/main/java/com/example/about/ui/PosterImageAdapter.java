@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.example.about.R;
 import com.example.vn008xw.carbeat.data.vo.Poster;
+import com.example.vn008xw.golf.util.ImageUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +30,9 @@ public final class PosterImageAdapter extends PagerAdapter {
   @Override
   public Object instantiateItem(ViewGroup container, int position) {
     ImageView view = (ImageView) LayoutInflater.from(container.getContext()).inflate(R.layout.about_poster_layout, container, false);
-
-
+    final Poster poster = items.get(position);
+    container.addView(view);
+    ImageUtil.loadLargeImage(view, poster);
     return view;
   }
 
@@ -42,5 +44,10 @@ public final class PosterImageAdapter extends PagerAdapter {
   @Override
   public boolean isViewFromObject(View view, Object object) {
     return view == object;
+  }
+
+  @Override
+  public void destroyItem(ViewGroup container, int position, Object object) {
+   container.removeView((View) object);
   }
 }

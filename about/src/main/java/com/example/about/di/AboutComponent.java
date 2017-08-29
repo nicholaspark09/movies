@@ -14,7 +14,7 @@ import dagger.Component;
 import dagger.android.support.AndroidSupportInjectionModule;
 
 @Singleton
-@Component(modules = AppModule.class)
+@Component(modules = {AppModule.class, AboutModule.class})
 public interface AboutComponent {
 
   void inject(AboutActivity aboutActivity);
