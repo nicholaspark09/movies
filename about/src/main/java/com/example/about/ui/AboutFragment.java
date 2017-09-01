@@ -76,7 +76,7 @@ public class AboutFragment extends BaseFragment {
 
       if (response.status == Resource.Status.SUCCESS) {
         if (viewPager.get() != null) {
-          final PosterImageAdapter posterImageAdapter = new PosterImageAdapter(getContext(), response.data);
+          final PosterImageAdapter posterImageAdapter = new PosterImageAdapter(response.data);
           adapter = new AutoClearedValue<>(AboutFragment.this, posterImageAdapter);
           viewPager.get().setAdapter(posterImageAdapter);
         }

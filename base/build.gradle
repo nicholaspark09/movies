@@ -64,6 +64,7 @@ dependencies {
             deps.picasso,
             deps.retrofit.base,
             deps.retrofit.gsonConverter,
+            deps.scaleimage,
             deps.stetho,
             deps.support.constraintLayout,
             deps.gson,

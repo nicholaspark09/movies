@@ -32,5 +32,4 @@ dependencies {
             "android.arch.lifecycle:compiler:${rootProject.arcVersion}")
     androidTestCompile("android.arch.core:core-testing:${rootProject.arcVersion}", {})
     testCompile "org.mockito:mockito-android:${rootProject.mockitoVersion}"
-
 }
