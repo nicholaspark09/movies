@@ -3,8 +3,12 @@ package com.example.vn008xw.golf.ui.base;
 import android.arch.lifecycle.LifecycleRegistry;
 import android.arch.lifecycle.LifecycleRegistryOwner;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+
 import static android.arch.lifecycle.Lifecycle.Event.*;
 
 /**
@@ -54,5 +58,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Lifecycl
   protected void onDestroy() {
     super.onDestroy();
     mRegistry.handleLifecycleEvent(ON_DESTROY);
+  }
+
+  public void setToolbar(@NonNull Toolbar toolbar) {
+    setSupportActionBar(toolbar);
   }
 }

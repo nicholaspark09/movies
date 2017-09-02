@@ -51,7 +51,7 @@ public final class ImageUtil {
             .error(R.drawable.error)
             .override(poster.getWidth(), poster.getHeight())
             .diskCacheStrategy(DiskCacheStrategy.RESULT)
-            .centerCrop()
+            .fitCenter()
             .into(imageView);
   }
 

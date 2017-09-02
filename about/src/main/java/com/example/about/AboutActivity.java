@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.util.Pair;
 import android.widget.Toast;
 
 import com.example.about.ui.AboutFragment;
@@ -13,7 +14,9 @@ public class AboutActivity extends BaseActivity {
 
   private static final String FAKE_UPC = "035000521019";
   private static final String QUERY_MOVIE_KEY = "movieId";
+  private static final String QUERY_MOVIE_TITLE = "title";
   private Integer movieId;
+  private String movieTitle;
 
 
   @Override
@@ -27,20 +30,22 @@ public class AboutActivity extends BaseActivity {
     // Get the movieId
     if (savedInstanceState == null) {
       try {
-        movieId = getMovieId(getIntent());
-
+        final Pair<Integer, String> movieInfo = getMovieInfo(getIntent());
+        movieId = movieInfo.first;
+        movieTitle = movieInfo.second;
       } catch (NumberFormatException e) {
         e.printStackTrace();
         Toast.makeText(this, "Couldn't find the movie id. Sorry.", Toast.LENGTH_SHORT).show();
       }
     } else {
       movieId = savedInstanceState.getInt(QUERY_MOVIE_KEY);
+      movieTitle = savedInstanceState.getString(QUERY_MOVIE_TITLE);
     }
 
     AboutFragment fragment =
             (AboutFragment) getSupportFragmentManager().findFragmentById(R.id.contentFrame);
     if (fragment == null) {
-      fragment = AboutFragment.create(movieId);
+      fragment = AboutFragment.create(movieId, movieTitle);
     }
     getSupportFragmentManager()
             .beginTransaction()
@@ -53,6 +58,7 @@ public class AboutActivity extends BaseActivity {
     super.onSaveInstanceState(outState);
     if (movieId != null) {
       outState.putInt(QUERY_MOVIE_KEY, movieId);
+      outState.putString(QUERY_MOVIE_TITLE, movieTitle);
     }
   }
 
@@ -62,10 +68,11 @@ public class AboutActivity extends BaseActivity {
     movieId = savedInstanceState.getInt(QUERY_MOVIE_KEY);
   }
 
-  private Integer getMovieId(@NonNull Intent intent) throws NumberFormatException {
+  private Pair<Integer, String> getMovieInfo(@NonNull Intent intent) throws NumberFormatException {
     final Uri data = intent.getData();
     final String movieIdText = data.getQueryParameter(QUERY_MOVIE_KEY);
+    final String title = data.getQueryParameter(QUERY_MOVIE_TITLE);
     final Integer movieId = Integer.valueOf(movieIdText);
-    return movieId;
+    return Pair.create(movieId, title);
   }
 }

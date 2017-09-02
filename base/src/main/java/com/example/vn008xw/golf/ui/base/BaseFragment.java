@@ -4,8 +4,11 @@ import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LifecycleRegistry;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -74,5 +77,18 @@ public class BaseFragment extends Fragment implements LifecycleOwner {
     errorMessage = message == null ? getString(R.string.error_generic) : message;
     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
     Log.d("Error", errorMessage);
+  }
+
+  public ActionBar getActionBar() {
+    if (getActivity() instanceof BaseActivity) {
+      return ((BaseActivity) getActivity()).getSupportActionBar();
+    }
+    return null;
+  }
+
+  public void setActionBar(@NonNull Toolbar toolbar) {
+    if (getActivity() instanceof BaseActivity) {
+      ((BaseActivity) getActivity()).setSupportActionBar(toolbar);
+    }
   }
 }

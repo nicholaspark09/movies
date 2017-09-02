@@ -5,9 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -23,14 +25,16 @@ public class AboutFragment extends BaseFragment {
 
   private static final String TAG = AboutFragment.class.getSimpleName();
   private static final String MOVIE_KEY = "args:movie_id";
+  private static final String TITLE_KEY = "args:movie_title";
 
   // Instant app feature modules don't actually support databinding for now
-  private AboutViewModel viewModel;
-  private AutoClearedValue<Toolbar> toolbar;
-  private AutoClearedValue<ViewPager> viewPager;
-  private AutoClearedValue<ProgressBar> progressBar;
-  private AutoClearedValue<TextView> description;
-  private AutoClearedValue<PosterImageAdapter> adapter;
+  private AboutViewModel mViewModel;
+  private AutoClearedValue<Toolbar> mToolbar;
+  private AutoClearedValue<ViewPager> mViewPager;
+  private AutoClearedValue<ProgressBar> mProgressBar;
+  private AutoClearedValue<TextView> mDescription;
+  private AutoClearedValue<TabLayout> mTabLayout;
+  private AutoClearedValue<PosterImageAdapter> mAdapter;
 
   @Nullable
   @Override
@@ -50,54 +54,72 @@ public class AboutFragment extends BaseFragment {
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
 
-    toolbar = new AutoClearedValue<>(this, view.findViewById(R.id.toolbar));
-    viewPager = new AutoClearedValue<>(this, view.findViewById(R.id.view_pager));
-    progressBar = new AutoClearedValue<>(this, view.findViewById(R.id.progress_bar));
-    description = new AutoClearedValue<>(this, view.findViewById(R.id.description));
+
+    mToolbar = new AutoClearedValue<>(this, view.findViewById(R.id.toolbar));
+    mViewPager = new AutoClearedValue<>(this, view.findViewById(R.id.view_pager));
+    mProgressBar = new AutoClearedValue<>(this, view.findViewById(R.id.progress_bar));
+    mDescription = new AutoClearedValue<>(this, view.findViewById(R.id.description));
+    mTabLayout = new AutoClearedValue<>(this, view.findViewById(R.id.tab_layout));
+    setActionBar(mToolbar.get());
+    getActionBar().setDisplayShowHomeEnabled(true);
+    getActionBar().setDisplayHomeAsUpEnabled(true);
+    getActionBar().setDisplayShowTitleEnabled(false);
+    mToolbar.get().setTitle(getArguments().getString(TITLE_KEY));
   }
 
   @Override
   public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 
-    viewModel = ViewModelProviders.of(this).get(AboutViewModel.class);
-    viewModel.loadMovie().observe(this, response -> {
+    mViewModel = ViewModelProviders.of(this).get(AboutViewModel.class);
+    mViewModel.loadMovie().observe(this, response -> {
 
       setLoading(response.status);
       if (response.status == Resource.Status.SUCCESS) {
-        toolbar.get().setTitle(response.data.getTitle());
-        description.get().setText(response.data.getOverview());
+        mDescription.get().setText(response.data.getOverview());
 
       } else if (response.status == Resource.Status.ERROR) {
         handleError(response.message);
       }
     });
 
-    viewModel.loadPosters().observe(this, response ->{
+    mViewModel.loadPosters().observe(this, response -> {
 
       if (response.status == Resource.Status.SUCCESS) {
-        if (viewPager.get() != null) {
-          final PosterImageAdapter posterImageAdapter = new PosterImageAdapter(response.data);
-          adapter = new AutoClearedValue<>(AboutFragment.this, posterImageAdapter);
-          viewPager.get().setAdapter(posterImageAdapter);
+        if (mViewPager.get() != null) {
+          final PosterImageAdapter posterImageAdapter = new PosterImageAdapter(response.data.subList(0, 7));
+          mAdapter = new AutoClearedValue<>(AboutFragment.this, posterImageAdapter);
+          mViewPager.get().setAdapter(posterImageAdapter);
+          mTabLayout.get().setupWithViewPager(mViewPager.get());
         }
       } else if (response.status == Resource.Status.ERROR) {
         handleError(response.message);
       }
     });
 
-    viewModel.setMovieId(getArguments().getInt(MOVIE_KEY));
+    mViewModel.setMovieId(getArguments().getInt(MOVIE_KEY));
 
     super.onActivityCreated(savedInstanceState);
   }
 
   private void setLoading(@NonNull Resource.Status status) {
-    progressBar.get().setVisibility(status == Resource.Status.LOADING ? View.VISIBLE : View.GONE);
+    mProgressBar.get().setVisibility(status == Resource.Status.LOADING ? View.VISIBLE : View.GONE);
   }
 
-  public static AboutFragment create(@NonNull Integer movieId) {
+  @Override
+  public boolean onOptionsItemSelected(MenuItem item) {
+    switch (item.getItemId()) {
+      case android.R.id.home:
+        getActivity().finish();
+        return true;
+    }
+    return super.onOptionsItemSelected(item);
+  }
+
+  public static AboutFragment create(@NonNull Integer movieId, @NonNull String movieTitle) {
     final AboutFragment fragment = new AboutFragment();
     final Bundle bundle = new Bundle();
     bundle.putInt(MOVIE_KEY, movieId);
+    bundle.putString(TITLE_KEY, movieTitle);
     fragment.setArguments(bundle);
     return fragment;
   }

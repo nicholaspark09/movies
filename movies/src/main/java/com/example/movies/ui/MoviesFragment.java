@@ -100,7 +100,7 @@ public class MoviesFragment extends BaseFragment {
   private void setupAdapter() {
     final MoviesAdapter adapter = new MoviesAdapter(movie -> {
       // Send them to another instant app just to see if it works
-      String url = "https://golfstory.com/about?movieId=" + movie.getId();
+      String url = "https://golfstory.com/about?movieId=" + movie.getId() + "&title=" + movie.getTitle();
       final Intent intent = IntentUtil.getInstantAppIntent(getContext(), url);
       startActivity(intent);
     });
