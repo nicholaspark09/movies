@@ -26,7 +26,6 @@ public class AboutActivity extends BaseActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_about);
 
-
     // Get the movieId
     if (savedInstanceState == null) {
       try {

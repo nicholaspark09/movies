@@ -2,12 +2,19 @@ package com.example.about.ui;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.transition.ChangeBounds;
+import android.transition.ChangeImageTransform;
+import android.transition.ChangeTransform;
+import android.transition.TransitionSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +24,7 @@ import android.widget.TextView;
 
 import com.example.about.R;
 import com.example.about.di.AboutInjector;
+import com.example.about.ui.movieimages.MovieImagesFragment;
 import com.example.vn008xw.golf.ui.base.BaseFragment;
 import com.example.vn008xw.golf.vo.AutoClearedValue;
 import com.example.vn008xw.golf.vo.Resource;
@@ -53,8 +61,6 @@ public class AboutFragment extends BaseFragment {
   @Override
   public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
-
-
     mToolbar = new AutoClearedValue<>(this, view.findViewById(R.id.toolbar));
     mViewPager = new AutoClearedValue<>(this, view.findViewById(R.id.view_pager));
     mProgressBar = new AutoClearedValue<>(this, view.findViewById(R.id.progress_bar));
@@ -86,7 +92,9 @@ public class AboutFragment extends BaseFragment {
 
       if (response.status == Resource.Status.SUCCESS) {
         if (mViewPager.get() != null) {
-          final PosterImageAdapter posterImageAdapter = new PosterImageAdapter(response.data.subList(0, 7));
+          final PosterImageAdapter posterImageAdapter = new PosterImageAdapter(response.data.subList(0, 6), (imageView, poster) -> {
+            sendToMovieImages(mViewPager.get(), poster);
+          });
           mAdapter = new AutoClearedValue<>(AboutFragment.this, posterImageAdapter);
           mViewPager.get().setAdapter(posterImageAdapter);
           mTabLayout.get().setupWithViewPager(mViewPager.get());
@@ -122,5 +130,32 @@ public class AboutFragment extends BaseFragment {
     bundle.putString(TITLE_KEY, movieTitle);
     fragment.setArguments(bundle);
     return fragment;
+  }
+
+  private void sendToMovieImages(@NonNull ViewPager viewPager,
+                                 @NonNull int position) {
+    final MovieImagesFragment fragment = MovieImagesFragment.create(
+            getArguments().getInt(MOVIE_KEY),
+            getArguments().getString(TITLE_KEY),
+            ViewCompat.getTransitionName(viewPager),
+            position);
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+      final TransitionSet transitionSet = new TransitionSet()
+              .addTransition(new ChangeBounds())
+              .addTransition(new ChangeTransform())
+              .addTransition(new ChangeImageTransform());
+      transitionSet.setDuration(1000);
+
+      fragment.setSharedElementEnterTransition(transitionSet);
+      fragment.setSharedElementReturnTransition(transitionSet);
+    }
+    getFragmentManager()
+            .beginTransaction()
+            .addSharedElement(viewPager, ViewCompat.getTransitionName(viewPager))
+            .addToBackStack(TAG)
+            .replace(R.id.contentFrame, fragment)
+            .commit();
   }
 }

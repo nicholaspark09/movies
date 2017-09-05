@@ -52,11 +52,11 @@ public class AboutViewModel extends AndroidViewModel {
     aboutComponent.inject(this);
   }
 
-  LiveData<Resource<Movie>> loadMovie() {
+  public LiveData<Resource<Movie>> loadMovie() {
     return movie;
   }
 
-  LiveData<Resource<List<Poster>>> loadPosters() {
+  public LiveData<Resource<List<Poster>>> loadPosters() {
     return posters;
   }
 

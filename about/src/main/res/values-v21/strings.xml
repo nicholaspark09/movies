@@ -1,0 +1,11 @@
+<resources>
+
+
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- About Activity -->
+    <string name="about_title">Walmart</string>
+
+    <!-- Transition names -->
+    <string name="movieimages_transition">movie_images_transition</string>
+</resources>

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.example.about.AboutActivity;
 import com.example.about.ui.AboutFragment;
 import com.example.about.ui.AboutViewModel;
+import com.example.about.ui.movieimages.MovieImagesFragment;
 import com.example.vn008xw.golf.AppModule;
 
 import javax.inject.Singleton;
@@ -22,6 +23,8 @@ public interface AboutComponent {
   void inject(AboutFragment aboutFragment);
 
   void inject(AboutViewModel aboutViewModel);
+
+  void inject(MovieImagesFragment movieImagesFragment);
 
   @Component.Builder
   interface Builder {

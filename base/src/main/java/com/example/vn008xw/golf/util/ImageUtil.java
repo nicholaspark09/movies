@@ -49,10 +49,28 @@ public final class ImageUtil {
             .load(endpoint)
             .placeholder(R.drawable.loading)
             .error(R.drawable.error)
-            .override(poster.getWidth(), poster.getHeight())
-            .diskCacheStrategy(DiskCacheStrategy.RESULT)
-            .fitCenter()
+            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
             .into(imageView);
+  }
+
+  public static void loadLargeImage(@NonNull ImageView imageView,
+                                    @NonNull Poster poster,
+                                    @NonNull Callback callback) {
+    final String endpoint = getLargePath() + poster.getFilePath();
+    Glide.with(imageView.getContext())
+            .load(endpoint)
+            .placeholder(R.drawable.loading)
+            .error(R.drawable.error)
+            .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+            .into(new ViewTarget<ImageView, GlideDrawable>(imageView) {
+              @Override
+              public void onResourceReady(GlideDrawable resource, GlideAnimation<? super GlideDrawable> glideAnimation) {
+                if (resource instanceof GlideBitmapDrawable) {
+                  getView().setImageBitmap(((GlideBitmapDrawable) resource).getBitmap());
+                  callback.onImageFinished();
+                }
+              }
+            });
   }
 
   public static void loadScalableImage(@NonNull SubsamplingScaleImageView scaleView, @NonNull Poster poster) {
@@ -71,5 +89,9 @@ public final class ImageUtil {
                 }
               }
             });
+  }
+
+  public interface Callback {
+    void onImageFinished();
   }
 }
