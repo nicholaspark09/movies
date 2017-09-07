@@ -50,30 +50,31 @@ ext {
     glideVersion = '3.7.0'
 }
 
+
 ext.deps = [
         'butterknife': [
                 'runtime' : "com.jakewharton:butterknife:${ext.butterknifeVersion}",
                 'compiler': "com.jakewharton:butterknife-compiler:${ext.butterknifeVersion}",
         ],
-        'dagger'    : [
+        'dagger'     : [
                 'base'          : "com.google.dagger:dagger:${ext.daggerVersion}",
                 'androidSupport': "com.google.dagger:dagger-android-support:${ext.daggerVersion}",
                 'compiler'      : "com.google.dagger:dagger-compiler:${ext.daggerVersion}"
         ],
-        'dex'       : "com.android.support:multidex:${ext.dexVersion}",
-        'glide'     : "com.github.bumptech.glide:glide:${ext.glideVersion}",
-        'gson'      : "com.google.code.gson:gson:${ext.gsonVersion}",
-        'retrofit'  : [
+        'dex'        : "com.android.support:multidex:${ext.dexVersion}",
+        'glide'      : "com.github.bumptech.glide:glide:${ext.glideVersion}",
+        'gson'       : "com.google.code.gson:gson:${ext.gsonVersion}",
+        'retrofit'   : [
                 'base'         : "com.squareup.retrofit2:retrofit:${ext.retrofitVersion}",
                 'gsonConverter': "com.squareup.retrofit2:converter-gson:${ext.retrofitVersion}"
         ],
-        'lifecycle' : [
+        'lifecycle'  : [
                 'runtime'   : "android.arch.lifecycle:runtime:${ext.arcVersion}",
                 'extensions': "android.arch.lifecycle:extensions:${ext.arcVersion}",
                 'compiler'  : "android.arch.lifecycle:compiler:${ext.arcVersion}"
         ],
-        'scaleimage': "com.davemorrissey.labs:subsampling-scale-image-view:3.6.0",
-        'support'   : [
+        'scaleimage' : "com.davemorrissey.labs:subsampling-scale-image-view:3.6.0",
+        'support'    : [
                 'annotations'     : "com.android.support:support-annotations:${ext.supportLib}",
                 'design'          : "com.android.support:design:${ext.supportLib}",
                 'recyclerView'    : "com.android.support:recyclerview-v7:${ext.supportLib}",
@@ -81,11 +82,11 @@ ext.deps = [
                 'appCompat'       : "com.android.support:appcompat-v7:${ext.supportLib}",
                 'constraintLayout': "com.android.support.constraint:constraint-layout:${ext.constraintVersion}"
         ],
-        'stetho'    : "com.facebook.stetho:stetho-okhttp3:${ext.stethoVersion}",
-        'timber'    : 'com.jakewharton.timber:timber:4.5.1',
-        'picasso'   : "com.squareup.picasso:picasso:${ext.picassoVersion}",
-        'kotlin'    : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${ext.kotlin_version}",
-        'leakCanary': [
+        'stetho'     : "com.facebook.stetho:stetho-okhttp3:${ext.stethoVersion}",
+        'timber'     : 'com.jakewharton.timber:timber:4.5.1',
+        'picasso'    : "com.squareup.picasso:picasso:${ext.picassoVersion}",
+        'kotlin'     : "org.jetbrains.kotlin:kotlin-stdlib-jre7:${ext.kotlin_version}",
+        'leakCanary' : [
                 'real': "com.squareup.leakcanary:leakcanary-android:${ext.leakCanaryVersion}",
                 'noOp': "com.squareup.leakcanary:leakcanary-android-no-op:${ext.leakCanaryVersion}",
         ]
